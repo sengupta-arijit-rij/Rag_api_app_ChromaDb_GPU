@@ -38,11 +38,10 @@ DEVICE = os.environ.get("DEVICE", "cuda")  # Use "cuda" for GPU, "cpu" for CPU
 try:
     rag_engine = RAGEngine(
         base_dir=os.getcwd(), 
-        lm_studio_url=LM_STUDIO_URL,
-        model_name=LLAMA_MODEL,
+        lm_studio_base_url=LM_STUDIO_URL,
+        lm_studio_model=LLAMA_MODEL,
         chroma_persist_dir=CHROMA_PERSIST_DIR,
-        document_dir=DOCUMENT_DIR,
-        device=DEVICE
+        document_dir=DOCUMENT_DIR
     )
     logger.info("RAG Engine initialized successfully")
 except Exception as e:
@@ -50,7 +49,7 @@ except Exception as e:
     # Still create the engine, but it might be in a degraded state
     rag_engine = RAGEngine(
         base_dir=os.getcwd(), 
-        lm_studio_url=LM_STUDIO_URL,
+        lm_studio_base_url=LM_STUDIO_URL,
         chroma_persist_dir=CHROMA_PERSIST_DIR
     )
 
@@ -87,8 +86,8 @@ def health_check():
             "lm_studio_url": LM_STUDIO_URL,
             "lm_status": lm_status,
             "gpu_status": gpu_status,
-            "device": rag_engine.device,
-            "model": rag_engine.model_name,
+            "device": DEVICE,
+            "model": rag_engine.lm_studio_model,
             "document_dir": rag_engine.document_dir,
             "chroma_persist_dir": rag_engine.chroma_persist_dir,
             "index_loaded": rag_engine.index is not None,
